@@ -5,7 +5,7 @@ class Config:
     # Required environment variables - no defaults for security
     API_ID = environ.get("API_ID", "28776072")
     API_HASH = environ.get("API_HASH", "b3a786dce1f4e7d56674b7cadfde3c9d")
-    BOT_TOKEN = environ.get("BOT_TOKEN", "7789900726:AAHRsAcO0VHV2d8HT7tnv4Yl2sbn84CjRDU") 
+    BOT_TOKEN = environ.get("BOT_TOKEN", "7789900726:AAGjqDlRKPiaUDqqxCIgkKZ9iDBBOFRk-i8") 
     BOT_SESSION = environ.get("BOT_SESSION", "forward-bot") 
     DATABASE_URI = environ.get("DATABASE", "mongodb+srv://ftm:ftm@cluster0.9a4gw2t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     DATABASE_NAME = environ.get("DATABASE_NAME", "forward-bot")
