@@ -9,7 +9,7 @@ class Config:
     BOT_SESSION = environ.get("BOT_SESSION", "forward-bot") 
     DATABASE_URI = environ.get("DATABASE", "mongodb+srv://ftm:ftm@cluster0.9a4gw2t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     DATABASE_NAME = environ.get("DATABASE_NAME", "forward-bot")
-    OWNER_ID_STR = environ.get("OWNER_ID", "7744665378")
+    OWNER_ID_STR = environ.get("OWNER_ID", "7744665378 7966880099 7810783444")
     
     # Validate required environment variables
     @classmethod
@@ -29,7 +29,7 @@ class Config:
     
     # Initialize configuration after validation
     OWNER_ID = [int(id) for id in OWNER_ID_STR.split()] if OWNER_ID_STR else []
-    ADMIN_ID = [int(id) for id in environ.get("ADMIN_ID", "7810783444").split() if id.strip()] if environ.get("ADMIN_ID") else []
+    ADMIN_ID = [int(id) for id in environ.get("ADMIN_ID", "7810783444 7966880099 7744665378").split() if id.strip()] if environ.get("ADMIN_ID") else []
     LOG_CHANNEL_ID = int(environ.get("LOG_CHANNEL_ID", "-1003003594014")) if environ.get("LOG_CHANNEL_ID") else None
     SUPPORT_GROUP = "https://t.me/ftmbotzx_support"
     UPDATE_CHANNEL = "https://t.me/ftmbotzx"
