@@ -26,6 +26,105 @@ def main_buttons():
          InlineKeyboardButton('💬 Contact Admin', url=Config.ADMIN_CONTACT_URL)]
     ])
 
+async def filters_buttons(user_id):
+    """Generate filter settings buttons"""
+    data = await get_configs(user_id)
+    buttons = []
+    
+    # Message type filters
+    buttons.append([
+        InlineKeyboardButton(f"{'✅' if data.get('text', True) else '❌'} Text", 
+                           callback_data='settings#updatefilter-text-' + str(data.get('text', True))),
+        InlineKeyboardButton(f"{'✅' if data.get('photo', True) else '❌'} Photo", 
+                           callback_data='settings#updatefilter-photo-' + str(data.get('photo', True)))
+    ])
+    buttons.append([
+        InlineKeyboardButton(f"{'✅' if data.get('video', True) else '❌'} Video", 
+                           callback_data='settings#updatefilter-video-' + str(data.get('video', True))),
+        InlineKeyboardButton(f"{'✅' if data.get('document', True) else '❌'} Document", 
+                           callback_data='settings#updatefilter-document-' + str(data.get('document', True)))
+    ])
+    buttons.append([
+        InlineKeyboardButton(f"{'✅' if data.get('audio', True) else '❌'} Audio", 
+                           callback_data='settings#updatefilter-audio-' + str(data.get('audio', True))),
+        InlineKeyboardButton(f"{'✅' if data.get('voice', True) else '❌'} Voice", 
+                           callback_data='settings#updatefilter-voice-' + str(data.get('voice', True)))
+    ])
+    buttons.append([
+        InlineKeyboardButton(f"{'✅' if data.get('animation', True) else '❌'} Animation", 
+                           callback_data='settings#updatefilter-animation-' + str(data.get('animation', True))),
+        InlineKeyboardButton(f"{'✅' if data.get('sticker', True) else '❌'} Sticker", 
+                           callback_data='settings#updatefilter-sticker-' + str(data.get('sticker', True)))
+    ])
+    
+    # Additional settings
+    buttons.append([
+        InlineKeyboardButton('📏 File Size Limit', callback_data='settings#file_size'),
+        InlineKeyboardButton('🔤 Keywords', callback_data='settings#get_keyword')
+    ])
+    buttons.append([
+        InlineKeyboardButton('📎 Extensions', callback_data='settings#get_extension'),
+        InlineKeyboardButton('➡️ More Filters', callback_data='settings#nextfilters')
+    ])
+    buttons.append([InlineKeyboardButton('↩ Back', callback_data='settings#main')])
+    
+    return InlineKeyboardMarkup(buttons)
+
+async def next_filters_buttons(user_id):
+    """Generate additional filter settings buttons"""
+    data = await get_configs(user_id)
+    buttons = []
+    
+    buttons.append([
+        InlineKeyboardButton(f"{'✅' if data.get('poll', True) else '❌'} Poll", 
+                           callback_data='settings#updatefilter-poll-' + str(data.get('poll', True))),
+        InlineKeyboardButton(f"{'✅' if data.get('protect', False) else '❌'} Protect Content", 
+                           callback_data='settings#updatefilter-protect-' + str(data.get('protect', False)))
+    ])
+    buttons.append([InlineKeyboardButton('⬅️ Back to Filters', callback_data='settings#filters')])
+    
+    return InlineKeyboardMarkup(buttons)
+
+def size_button(size):
+    """Generate file size limit buttons"""
+    buttons = []
+    buttons.append([
+        InlineKeyboardButton('+ 100 MB', callback_data=f'settings#update_size-{size + 100}'),
+        InlineKeyboardButton('- 100 MB', callback_data=f'settings#update_size-{max(0, size - 100)}')
+    ])
+    buttons.append([
+        InlineKeyboardButton('+ 10 MB', callback_data=f'settings#update_size-{size + 10}'),
+        InlineKeyboardButton('- 10 MB', callback_data=f'settings#update_size-{max(0, size - 10)}')
+    ])
+    buttons.append([
+        InlineKeyboardButton('Greater Than', callback_data=f'settings#update_limit-greater-{size}'),
+        InlineKeyboardButton('Less Than', callback_data=f'settings#update_limit-less-{size}')
+    ])
+    buttons.append([InlineKeyboardButton('↩ Back', callback_data='settings#filters')])
+    
+    return InlineKeyboardMarkup(buttons)
+
+def size_limit(limit):
+    """Parse size limit"""
+    if limit == 'greater':
+        return 'greater', 'greater than'
+    elif limit == 'less':
+        return 'less', 'less than'
+    else:
+        return limit, str(limit)
+
+def extract_btn(items):
+    """Extract buttons from list of items"""
+    buttons = []
+    if items and isinstance(items, list):
+        for i in range(0, len(items), 2):
+            row = []
+            row.append(InlineKeyboardButton(items[i], callback_data=f'settings#rmve_item_{i}'))
+            if i + 1 < len(items):
+                row.append(InlineKeyboardButton(items[i+1], callback_data=f'settings#rmve_item_{i+1}'))
+            buttons.append(row)
+    return buttons
+
 @Client.on_message(filters.command('settings'))
 async def settings(client: Client, message):
    user_id = message.from_user.id
